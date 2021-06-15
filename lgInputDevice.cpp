@@ -293,28 +293,15 @@ int lgInputDevice::getMsgQ()
 static void sendKeyThread(lgInputDevice *vDev)
 {
    struct mQData1 mD = {};
-  // struct input_event ev = {};
     lgInputDevice *vD = vDev;
     vD->type = MOUSE;
     int mqId = vD->getMsgQ();
 
-    //cout << "mqId : "<<mqId<<endl;
     while (true) {
-           // struct mQData{
-             //   long type;
-               // struct input_event ev;
-           // } mD;
-//printf("%d",msgrcv(mqId, &mD, sizeof(struct mQData), 1, 0));
             if (msgrcv(mqId, &mD, sizeof(struct mQData1), 1, 0) < 0) {
-		printf("%d",msgrcv(mqId, &mD, sizeof(struct mQData), 1, 0));
-		printf("error no: %s \n", errno);
                 printf("error no: %s mousetype %d\n", strerror(errno), vD->mouseType);
                 continue;
 	    }
-	  // printf("%d",mD.ev.type);
-	 // printf("%d",mD.ev.code);
-	//printf("%d",mD.ev.value);
-
 	    vD->sendEvent(mD.ev.type, mD.ev.code, mD.ev.value);
     }
 }
